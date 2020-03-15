@@ -6,6 +6,7 @@ const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const multer = require('multer')
+const Database = require('./database')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -74,9 +75,8 @@ app.delete('/api/file/:filename', (req, res) => {
   res.status(404).json({ success: false })
 })
 
-app.get('/fileinfo', (req, res) => {
-  const files = fs.readdirSync(__dirname + '/.data/files/')
-  res.send(fs.statSync(__dirname + '/.data/files/' + files[0]))
+app.get('/file/:filename', (req, res) => {
+  res.sendFile(__dirname + '/.data/files/' + req.params.filename)
 })
 
 app.listen(process.env.PORT || 3000, () => {
