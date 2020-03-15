@@ -1,10 +1,17 @@
+const fs = require('fs')
 const express = require('express')
 const cmd = require('node-cmd')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
+const cors = require('cors')
+const multer = require('multer')
+const upload = multer({
+  dest: '.data/files'
+})
 
 const app = express()
 app.use(bodyParser.json())
+app.use(cors())
 
 const verifySignature = (req, res, next) => {
   const payload = JSON.stringify(req.body)
@@ -28,7 +35,7 @@ app.post('/git', verifySignature, (req, res) => {
       cmd.run('refresh')
       return res.status(200).send(data)
     })
-  } else if(req.headers['x-github-event'] == 'ping') {
+  } else if (req.headers['x-github-event'] == 'ping') {
     return res.status(200).send('PONG')
   } else {
     return res.status(200).send('Unsuported Github event. Nothing done.')
@@ -39,6 +46,20 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`Your app is listening on port ${process.env.PORT}`)
+app.post('/api/upload', upload.single('file'), (req, res) => {
+  console.log(req)
+  res.send('OK')
+})
+
+app.get('/file', (req, res) => {
+  res.sendFile(__dirname + '/.data/files/378423f05f58bd99283fdbcabb1428de.pdf')
+})
+
+app.get('/fileinfo', (req, res) => {
+  const files = fs.readdirSync(__dirname + '/.data/files/')
+  res.send(fs.statSync(__dirname + '/.data/files/' + files[0]))
+})
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Your app is listening on port ${process.env.PORT || 3000}`)
 })
