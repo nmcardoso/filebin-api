@@ -61,8 +61,10 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   res.send('OK')
 })
 
-app.get('/file', (req, res) => {
-  res.sendFile(__dirname + '/.data/files/378423f05f58bd99283fdbcabb1428de.pdf')
+app.get('/api/files', (req, res) => {
+  res.json(db.getAllFiles())
+})
+
 })
 
 app.get('/fileinfo', (req, res) => {
