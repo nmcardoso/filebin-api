@@ -65,6 +65,13 @@ app.get('/api/files', (req, res) => {
   res.json(db.getAllFiles())
 })
 
+app.delete('/api/file/:filename', (req, res) => {
+  if (fs.existsSync(__dirname + '/.data/files/' + req.params.filename)) {
+    db.deleteFile(req.params.filename)
+    fs.unlinkSync(__dirname + '/.data/files/' + req.params.filename)
+    res.json({ success: true })
+  }
+  res.status(404).json({ success: false })
 })
 
 app.get('/fileinfo', (req, res) => {
