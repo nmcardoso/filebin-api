@@ -1,13 +1,21 @@
 const fs = require('fs')
+const path = require('path')
 const express = require('express')
 const cmd = require('node-cmd')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const multer = require('multer')
-const upload = multer({
-  dest: '.data/files'
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '.data/files')
+  },
+  filename: (req, file, cb) => {
+    cb(null, crypto.randomBytes(16).toString('hex') + path.extname(file.originalname))
+  }
 })
+const upload = multer({ storage })
 
 const app = express()
 app.use(bodyParser.json())
