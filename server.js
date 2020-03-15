@@ -21,6 +21,8 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors())
 
+const db = new Database()
+
 const verifySignature = (req, res, next) => {
   const payload = JSON.stringify(req.body)
   const hmac = crypto.createHmac('sha1', process.env.GITHUB_SECRET)
@@ -55,7 +57,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/api/upload', upload.single('file'), (req, res) => {
-  console.log(req)
+  db.insertFile(req.file.filename, req.file.originalname)
   res.send('OK')
 })
 
