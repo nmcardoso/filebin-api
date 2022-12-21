@@ -9,7 +9,7 @@
   "author": "Natanael",
   "license": "ISC",
   "dependencies": {
-    "better-sqlite3": "^6.0.1",
+    "better-sqlite3": "^8.0.1",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
